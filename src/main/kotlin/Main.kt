@@ -1,6 +1,5 @@
 package io.github.omydagreat
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -15,7 +14,10 @@ import io.github.omydagreat.PreferencesManager.Companion.loadLastOpenedFolder
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import java.io.File
 
-/** Main entry point of the application. */
+/**
+ * Entry point of the application. Sets up the main window and initializes the theme and current
+ * folder state.
+ */
 fun main() = application {
   Window(onCloseRequest = ::exitApplication, title = "baka Markdown Explorer") {
     var darkTheme by remember { mutableStateOf(false) }
@@ -23,19 +25,19 @@ fun main() = application {
 
     loadLastOpenedFolder()?.let { currentFolder = PlatformDirectory(File(it)) }
 
-    MyAppTheme(darkTheme = darkTheme) {
+    BlueYellow(darkTheme = darkTheme) {
       Baka(darkTheme, onToggleTheme = { darkTheme = !darkTheme }, currentFolder)
     }
   }
 }
 
 /**
- * Composable function representing the main application UI.
+ * Composable function that sets up the main UI scaffold.
  *
  * @param darkTheme Boolean indicating if the dark theme is enabled.
  * @param onToggleTheme Lambda function to toggle the theme.
+ * @param initialFolder Initial folder to be displayed.
  */
-@Preview
 @Composable
 fun Baka(darkTheme: Boolean, onToggleTheme: () -> Unit, initialFolder: PlatformDirectory?) {
   var currentFolder by remember { mutableStateOf(initialFolder) }

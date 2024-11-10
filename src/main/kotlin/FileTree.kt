@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,8 +33,15 @@ data class TreeNode<T>(val value: T, val children: List<TreeNode<T>> = emptyList
 @Composable
 fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
   val flattenedTree = remember { flattenTree(node) }
+  val listState = rememberLazyListState()
+  val folderPath = node.value.absolutePath
 
-  LazyColumn(modifier = Modifier.fillMaxHeight().padding(start = 16.dp)) {
+  LaunchedEffect(folderPath) {
+    val savedScrollPosition = PreferencesManager.loadScrollPosition(folderPath)
+    listState.scrollToItem(savedScrollPosition)
+  }
+
+  LazyColumn(state = listState, modifier = Modifier.fillMaxHeight().padding(start = 16.dp)) {
     items(flattenedTree) { (file, depth) ->
       Text(
         text = file.name,
@@ -41,6 +51,10 @@ fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
           },
       )
     }
+  }
+
+  DisposableEffect(folderPath) {
+    onDispose { PreferencesManager.saveScrollPosition(folderPath, listState.firstVisibleItemIndex) }
   }
 }
 
@@ -62,9 +76,8 @@ fun buildFileTree(file: File): TreeNode<File> {
  * @param depth The current depth of the node.
  * @return A list of pairs containing the file and its depth.
  */
-fun flattenTree(node: TreeNode<File>, depth: Int = 0): List<Pair<File, Int>> {
-  val result = mutableListOf<Pair<File, Int>>()
-  result.add(node.value to depth)
-  node.children.forEach { child -> result.addAll(flattenTree(child, depth + 1)) }
-  return result
-}
+fun flattenTree(node: TreeNode<File>, depth: Int = 0): List<Pair<File, Int>> =
+  mutableListOf<Pair<File, Int>>().also {
+    it.add(node.value to depth)
+    node.children.forEach { child -> it.addAll(flattenTree(child, depth + 1)) }
+  }

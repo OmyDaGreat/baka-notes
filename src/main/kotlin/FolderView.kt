@@ -18,6 +18,8 @@ fun FolderView(folder: PlatformDirectory) {
   FileTreeView(fileTree, onFileSelected = { file -> selectedFile = file })
 
   selectedFile?.let { file ->
-    Window(onCloseRequest = { selectedFile = null }) { FileEditorWindow(file) }
+    Window(onCloseRequest = { selectedFile = null }, title = "baka File Editor - ${file.name}") {
+      FileEditorWindow(file)
+    }
   }
 }
