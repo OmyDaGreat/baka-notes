@@ -19,16 +19,15 @@ repositories {
 val coroutinesVersion: String by project
 val filekitVersion: String by project
 val kermitVersion: String by project
+val richTextVersion: String by project
 
 dependencies {
-  // Note, if you develop a library, you should use compose.desktop.common.
-  // compose.desktop.currentOs should be used in launcher-sourceSet
-  // (in a separate module for demo project and in testMain).
-  // With compose.desktop.common you will also lose @Preview functionality
   implementation(compose.desktop.currentOs)
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
   implementation("io.github.vinceglb:filekit-core:$filekitVersion")
   implementation("co.touchlab:kermit:$kermitVersion")
+  implementation("com.halilibo.compose-richtext:richtext-ui:$richTextVersion")
+  implementation("com.halilibo.compose-richtext:richtext-commonmark:$richTextVersion")
 }
 
 compose.desktop {

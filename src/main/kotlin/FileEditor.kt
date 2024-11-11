@@ -1,9 +1,14 @@
 package io.github.omydagreat
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.halilibo.richtext.markdown.Markdown
+import com.halilibo.richtext.ui.BasicRichText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,9 +17,9 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 /**
- * Composable function to display the file editor window.
+ * Composable function that displays a file editor window along with a markdown preview.
  *
- * @param file The selected file.
+ * @param file The file to be edited.
  */
 @Composable
 fun FileEditorWindow(file: File) {
@@ -22,27 +27,33 @@ fun FileEditorWindow(file: File) {
 
   LaunchedEffect(file) { loadFileContent(file) { content -> fileContent = content } }
 
-  FileEditor(
-    content = fileContent,
-    onContentChanged = {
-      fileContent = it
-      saveFile(file, it)
-    },
-  )
+  Row(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    FileEditor(
+      content = fileContent,
+      onContentChanged = {
+        fileContent = it
+        saveFile(file, it)
+      },
+      modifier = Modifier.weight(1f).padding(end = 8.dp),
+    )
+
+    BasicRichText(modifier = Modifier.weight(1f).padding(start = 8.dp)) { Markdown(fileContent) }
+  }
 }
 
 /**
- * Composable function to display the file editor.
+ * Composable function that displays a file editor.
  *
  * @param content The content of the file.
- * @param onContentChanged Lambda function to handle content changes.
+ * @param onContentChanged Callback function to handle content changes.
+ * @param modifier Modifier to be applied to the editor.
  */
 @Composable
-fun FileEditor(content: String, onContentChanged: (String) -> Unit) {
+fun FileEditor(content: String, onContentChanged: (String) -> Unit, modifier: Modifier = Modifier) {
   OutlinedTextField(
     value = content,
     onValueChange = onContentChanged,
-    modifier = Modifier.fillMaxSize(),
+    modifier = modifier.fillMaxSize(),
     maxLines = Int.MAX_VALUE,
     singleLine = false,
   )
