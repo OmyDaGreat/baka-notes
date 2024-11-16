@@ -19,20 +19,24 @@ import java.nio.file.Paths
 /**
  * Composable function that displays a file editor window along with a markdown preview.
  *
- * @param file The file to be edited.
+ * This function creates a window that contains a file editor and a markdown preview side by side.
+ * The file editor allows the user to edit the content of the file, and the markdown preview
+ * displays the rendered markdown content in real-time as the user types.
+ *
+ * @param file The file to be edited. The content of this file will be loaded and displayed in the editor.
  */
 @Composable
 fun FileEditorWindow(file: File) {
   var fileContent by remember { mutableStateOf("") }
 
-  LaunchedEffect(file) { loadFileContent(file) { content -> fileContent = content } }
+  LaunchedEffect(file) { file.loadFileContent { content -> fileContent = content } }
 
   Row(modifier = Modifier.fillMaxSize().padding(16.dp)) {
     FileEditor(
       content = fileContent,
       onContentChanged = {
         fileContent = it
-        saveFile(file, it)
+        file.saveFile(it)
       },
       modifier = Modifier.weight(1f).padding(end = 8.dp),
     )
@@ -44,12 +48,18 @@ fun FileEditorWindow(file: File) {
 /**
  * Composable function that displays a file editor.
  *
- * @param content The content of the file.
- * @param onContentChanged Callback function to handle content changes.
- * @param modifier Modifier to be applied to the editor.
+ * This function creates an `OutlinedTextField` that allows the user to edit the content of a file.
+ * The content of the file is passed as a parameter, and any changes made to the content are
+ * propagated back through the `onContentChanged` callback function.
+ *
+ * @param content The content of the file to be displayed and edited.
+ * @param onContentChanged Callback function to handle content changes. This function is called
+ *        whenever the content of the text field changes, with the new content as its parameter.
+ * @param modifier Modifier to be applied to the editor. This allows for customization of the
+ *        layout and appearance of the text field.
  */
 @Composable
-fun FileEditor(content: String, onContentChanged: (String) -> Unit, modifier: Modifier = Modifier) {
+fun FileEditor(content: String, onContentChanged: (String) -> Unit, modifier: Modifier = Modifier) =
   OutlinedTextField(
     value = content,
     onValueChange = onContentChanged,
@@ -57,31 +67,22 @@ fun FileEditor(content: String, onContentChanged: (String) -> Unit, modifier: Mo
     maxLines = Int.MAX_VALUE,
     singleLine = false,
   )
-}
 
 val ioScope = CoroutineScope(Dispatchers.IO)
 
 /**
- * Loads the content of a file.
+ * Loads the content of the file.
  *
- * @param file The file to load.
  * @param onContentLoaded Lambda function to handle the loaded content.
  */
-fun loadFileContent(file: File?, onContentLoaded: (String) -> Unit) {
-  file?.let {
-    ioScope.launch {
-      val content = Files.readString(Paths.get(it.toURI()))
-      onContentLoaded(content)
-    }
-  }
+fun File.loadFileContent(onContentLoaded: (String) -> Unit) = ioScope.launch {
+  val content = Files.readString(Paths.get(this@loadFileContent.toURI()))
+  onContentLoaded(content)
 }
 
 /**
- * Saves the content to a file.
+ * Saves the content to the file.
  *
- * @param file The file to save.
  * @param content The content to save.
  */
-fun saveFile(file: File?, content: String) {
-  file?.let { ioScope.launch { Files.writeString(Paths.get(it.toURI()), content) } }
-}
+fun File.saveFile(content: String) = ioScope.launch { Files.writeString(Paths.get(this@saveFile.toURI()), content) }

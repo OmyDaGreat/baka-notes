@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.github.omydagreat.PreferencesManager.Companion.saveScrollPosition
 import java.io.File
 
 /**
@@ -27,8 +28,17 @@ data class TreeNode<T>(val value: T, val children: List<TreeNode<T>> = emptyList
 /**
  * Composable function to display the file tree view.
  *
- * @param node The root node of the file tree.
- * @param onFileSelected Lambda function to handle file selection.
+ * This function creates a view that displays the contents of a folder as a tree structure.
+ * Each file and folder is represented as a node in the tree. When a file is selected from the tree,
+ * the `onFileSelected` callback is triggered with the selected file.
+ *
+ * The function also manages the scroll position of the tree view. When the folder path changes,
+ * it loads the saved scroll position from the preferences and scrolls to that position.
+ * When the composable is disposed, it saves the current scroll position to the preferences.
+ *
+ * @param node The root node of the file tree, represented as a `TreeNode<File>`.
+ * @param onFileSelected Lambda function to handle file selection. This function is called
+ *        whenever a file is selected, with the selected file as its parameter.
  */
 @Composable
 fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
@@ -54,20 +64,22 @@ fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
   }
 
   DisposableEffect(folderPath) {
-    onDispose { PreferencesManager.saveScrollPosition(folderPath, listState.firstVisibleItemIndex) }
+    onDispose { saveScrollPosition(folderPath, listState.firstVisibleItemIndex) }
   }
 }
 
 /**
- * Builds a file tree from a given file.
+ * Recursively builds a file tree from a given file.
  *
- * @param file The root file.
- * @return The root node of the file tree.
+ * This function traverses the directory structure starting from the given root file
+ * and constructs a tree where each node represents a file or directory. The root node
+ * represents the initial file, and its children represent the files and directories
+ * contained within it. This process is repeated recursively for each directory.
+ *
+ * @receiver The root file to build the tree from.
+ * @return The root node of the file tree, where each node contains a file and its children.
  */
-fun buildFileTree(file: File): TreeNode<File> {
-  val children = file.listFiles()?.map { buildFileTree(it) } ?: emptyList()
-  return TreeNode(file, children)
-}
+fun File.buildFileTree(): TreeNode<File> = TreeNode(this, listFiles()?.map { it.buildFileTree() } ?: emptyList())
 
 /**
  * Flattens a tree structure into a list of pairs.
@@ -76,8 +88,7 @@ fun buildFileTree(file: File): TreeNode<File> {
  * @param depth The current depth of the node.
  * @return A list of pairs containing the file and its depth.
  */
-fun flattenTree(node: TreeNode<File>, depth: Int = 0): List<Pair<File, Int>> =
-  mutableListOf<Pair<File, Int>>().also {
-    it.add(node.value to depth)
-    node.children.forEach { child -> it.addAll(flattenTree(child, depth + 1)) }
-  }
+fun flattenTree(node: TreeNode<File>, depth: Int = 0): List<Pair<File, Int>> = mutableListOf<Pair<File, Int>>().also {
+  it.add(node.value to depth)
+  node.children.forEach { child -> it.addAll(flattenTree(child, depth + 1)) }
+}
