@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.BasicRichText
@@ -66,18 +70,29 @@ fun FileEditor(content: String, onContentChanged: (String) -> Unit, modifier: Mo
     modifier = modifier.fillMaxSize(),
     maxLines = Int.MAX_VALUE,
     singleLine = false,
+    visualTransformation = PreserveTrailingSpacesTransformation()
   )
 
-val ioScope = CoroutineScope(Dispatchers.IO)
+/**
+ * A `VisualTransformation` that preserves trailing spaces in the text.
+ *
+ * This transformation replaces all spaces with non-breaking spaces to ensure
+ * that trailing spaces are visible in the text field.
+ */
+class PreserveTrailingSpacesTransformation : VisualTransformation {
+  override fun filter(text: AnnotatedString): TransformedText {
+    val transformedText = text.text.replace(" ", "\u00A0")
+    return TransformedText(AnnotatedString(transformedText), OffsetMapping.Identity)
+  }
+}
 
 /**
  * Loads the content of the file.
  *
  * @param onContentLoaded Lambda function to handle the loaded content.
  */
-fun File.loadFileContent(onContentLoaded: (String) -> Unit) = ioScope.launch {
-  val content = Files.readString(Paths.get(this@loadFileContent.toURI()))
-  onContentLoaded(content)
+fun File.loadFileContent(onContentLoaded: (String) -> Unit) = CoroutineScope(Dispatchers.IO).launch {
+  onContentLoaded(Files.readString(Paths.get(this@loadFileContent.toURI())))
 }
 
 /**
@@ -85,4 +100,6 @@ fun File.loadFileContent(onContentLoaded: (String) -> Unit) = ioScope.launch {
  *
  * @param content The content to save.
  */
-fun File.saveFile(content: String) = ioScope.launch { Files.writeString(Paths.get(this@saveFile.toURI()), content) }
+fun File.saveFile(content: String) = CoroutineScope(Dispatchers.IO).launch {
+  Files.writeString(Paths.get(this@saveFile.toURI()), content)
+}

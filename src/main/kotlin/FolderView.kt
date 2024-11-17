@@ -15,10 +15,9 @@ import java.io.File
  */
 @Composable
 fun FolderView(folder: PlatformDirectory) {
-  val fileTree by remember { mutableStateOf(folder.file.buildFileTree()) }
   var selectedFile by remember { mutableStateOf<File?>(null) }
 
-  FileTreeView(fileTree, onFileSelected = { file -> selectedFile = file })
+  FileTreeView(folder.file.buildFileTree(), onFileSelected = { file -> selectedFile = file })
 
   selectedFile?.let { file ->
     Window(onCloseRequest = { selectedFile = null }, title = "baka File Editor - ${file.name}") {
