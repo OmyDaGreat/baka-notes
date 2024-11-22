@@ -1,16 +1,11 @@
-package io.github.omydagreat
+package io.github.omydagreat.util
 
-import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-/**
- * Defines the light color palette for the application theme.
- */
-private val LightColorPalette =
+/** Defines the light color palette for the application theme. */
+val BYLightColorPalette =
   lightColors(
     primary = Color(0xFF1E88E5),
     primaryVariant = Color(0xFF1565C0),
@@ -25,10 +20,8 @@ private val LightColorPalette =
     onError = Color(0xFFFFFFFF),
   )
 
-/**
- * Defines the dark color palette for the application theme.
- */
-private val DarkColorPalette =
+/** Defines the dark color palette for the application theme. */
+val BYDarkColorPalette =
   darkColors(
     primary = Color(0xFF1E88E5),
     primaryVariant = Color(0xFF1565C0),
@@ -42,21 +35,3 @@ private val DarkColorPalette =
     onSurface = Color(0xFFFFFFFF),
     onError = Color(0xFF000000),
   )
-
-/**
- * A composable function that applies the BlueYellow theme to its content.
- *
- * @param darkTheme A boolean flag indicating whether to use the dark theme. Defaults to false.
- * @param content A composable lambda function representing the content to be themed.
- */
-@Composable
-fun BlueYellow(darkTheme: Boolean = false, content: @Composable () -> Unit) {
-  val colors: Colors =
-    if (darkTheme) {
-      DarkColorPalette
-    } else {
-      LightColorPalette
-    }
-
-  MaterialTheme(colors = colors, content = content)
-}
