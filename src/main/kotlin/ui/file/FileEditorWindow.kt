@@ -1,8 +1,11 @@
 package io.github.omydagreat.ui.file
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -42,6 +45,10 @@ fun FileEditorWindow(file: File) {
       modifier = Modifier.weight(1f).padding(end = 8.dp),
     )
 
-    BasicRichText(modifier = Modifier.weight(1f).padding(start = 8.dp)) { Markdown(fileContent) }
+    Column(
+      modifier = Modifier.weight(1f).padding(start = 8.dp).verticalScroll(rememberScrollState())
+    ) {
+      BasicRichText { Markdown(fileContent) }
+    }
   }
 }
