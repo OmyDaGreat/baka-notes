@@ -1,7 +1,6 @@
 package io.github.omydagreat
 
 import androidx.compose.runtime.*
-import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import io.github.omydagreat.ui.Baka
 import io.github.omydagreat.ui.BlueYellow
@@ -12,10 +11,9 @@ import io.github.omydagreat.util.PreferencesManager.Companion.loadLastOpenedFold
 import io.github.omydagreat.util.gate
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import java.io.File
-import moe.tlaster.precompose.PreComposeApp
-import moe.tlaster.precompose.ProvidePreComposeLocals
 import moe.tlaster.precompose.navigation.rememberNavigator
 import xyz.malefic.navigate.RouteManager
+import xyz.malefic.wrap.NavWindow
 
 /**
  * Entry point of the application.
@@ -28,29 +26,22 @@ import xyz.malefic.navigate.RouteManager
  * @receiver The application scope.
  */
 fun main() = application {
-  Window(onCloseRequest = ::exitApplication, title = "baka Markdown Explorer") {
-    ProvidePreComposeLocals {
-      PreComposeApp {
-        val navi = rememberNavigator()
-        var darkTheme by remember { mutableStateOf(false) }
-        var currentFolder by remember { mutableStateOf<PlatformDirectory?>(null) }
+  NavWindow(onCloseRequest = ::exitApplication, title = "baka Markdown Explorer") {
+    val navi = rememberNavigator()
+    var darkTheme by remember { mutableStateOf(false) }
+    var currentFolder by remember { mutableStateOf<PlatformDirectory?>(null) }
 
-        val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
-          mapOf(
-            "Baka" to { _ -> Baka(darkTheme, { darkTheme = !darkTheme }, currentFolder, navi) },
-            "LatestFiles" to { _ -> LatestFiles { file -> navi gate "fileEditor/${file.path}" } },
-            "FileEditorWindow" to { params -> FileEditorWindow(File(params[0]!!)) },
-          )
+    val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
+      mapOf(
+        "Baka" to { Baka(darkTheme, { darkTheme = !darkTheme }, currentFolder, navi) },
+        "LatestFiles" to { LatestFiles { file -> navi gate "fileEditor/${file.path}" } },
+        "FileEditorWindow" to { params -> FileEditorWindow(File(params[0]!!)) },
+      )
 
-        RouteManager.initialize(
-          composableMap,
-          this::class.java.getResourceAsStream("/routes.yaml")!!,
-        )
+    RouteManager.initialize(composableMap, this::class.java.getResourceAsStream("/routes.yaml")!!)
 
-        loadLastOpenedFolder()?.let { currentFolder = PlatformDirectory(File(it)) }
+    loadLastOpenedFolder()?.let { currentFolder = PlatformDirectory(File(it)) }
 
-        BlueYellow(darkTheme = darkTheme) { NavigationManager(navi) }
-      }
-    }
+    BlueYellow(darkTheme = darkTheme) { NavigationManager(navi) }
   }
 }

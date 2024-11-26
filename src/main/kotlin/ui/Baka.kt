@@ -4,12 +4,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
-import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import io.github.omydagreat.ui.folder.FolderSelector
 import io.github.omydagreat.ui.folder.FolderView
+import io.github.omydagreat.util.theme.Text.Heading4
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import moe.tlaster.precompose.navigation.Navigator
 
@@ -39,7 +39,7 @@ fun Baka(
   Scaffold(
     topBar = {
       TopAppBar(
-        title = { Text("Markdown Explorer") },
+        title = { Heading4("Markdown Explorer") },
         actions = { Switch(checked = darkTheme, onCheckedChange = { onToggleTheme() }) },
       )
     }

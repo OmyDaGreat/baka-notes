@@ -1,4 +1,4 @@
-package io.github.omydagreat.util
+package io.github.omydagreat.util.themed
 
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors

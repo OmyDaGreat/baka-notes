@@ -3,12 +3,12 @@ package io.github.omydagreat.ui.folder
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import io.github.omydagreat.util.PreferencesManager.Companion.saveLastOpenedFolder
+import io.github.omydagreat.util.theme.Text.Body1B
 import io.github.vinceglb.filekit.core.FileKit
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +41,7 @@ fun FolderSelector(onFolderSelected: (PlatformDirectory) -> Unit) {
       }
     }
   ) {
-    Text("Open Folder")
+    Body1B("Open Folder")
   }
   Spacer(modifier = Modifier.height(5.dp))
 }

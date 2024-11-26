@@ -25,6 +25,7 @@ dependencies {
   implementation(libs.filekit.core)
   implementation(libs.kermit)
   implementation(libs.richtext.ui)
+  implementation(libs.richtext.ui.material)
   implementation(libs.richtext.commonmark)
   implementation(libs.precompose)
   implementation(libs.maleficnav)

@@ -12,6 +12,7 @@ filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "file
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 richtext-ui = { module = "com.halilibo.compose-richtext:richtext-ui", version.ref = "richtext" }
 richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtext" }
+richtext-ui-material = { module = "com.halilibo.compose-richtext:richtext-ui-material", version.ref = "richtext" }
 precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
 maleficnav = { module = "xyz.malefic:maleficnav", version.ref = "maleficnav" }
 
