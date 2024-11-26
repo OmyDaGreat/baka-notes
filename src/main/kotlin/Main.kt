@@ -3,14 +3,19 @@ package io.github.omydagreat
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import io.github.omydagreat.ui.Baka
 import io.github.omydagreat.ui.BlueYellow
 import io.github.omydagreat.ui.NavigationManager
+import io.github.omydagreat.ui.file.FileEditorWindow
+import io.github.omydagreat.ui.file.LatestFiles
 import io.github.omydagreat.util.PreferencesManager.Companion.loadLastOpenedFolder
+import io.github.omydagreat.util.gate
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import java.io.File
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.ProvidePreComposeLocals
 import moe.tlaster.precompose.navigation.rememberNavigator
+import xyz.malefic.navigate.RouteManager
 
 /**
  * Entry point of the application.
@@ -30,16 +35,21 @@ fun main() = application {
         var darkTheme by remember { mutableStateOf(false) }
         var currentFolder by remember { mutableStateOf<PlatformDirectory?>(null) }
 
+        val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
+          mapOf(
+            "Baka" to { _ -> Baka(darkTheme, { darkTheme = !darkTheme }, currentFolder, navi) },
+            "LatestFiles" to { _ -> LatestFiles { file -> navi gate "fileEditor/${file.path}" } },
+            "FileEditorWindow" to { params -> FileEditorWindow(File(params[0]!!)) },
+          )
+
+        RouteManager.initialize(
+          composableMap,
+          this::class.java.getResourceAsStream("/routes.yaml")!!,
+        )
+
         loadLastOpenedFolder()?.let { currentFolder = PlatformDirectory(File(it)) }
 
-        BlueYellow(darkTheme = darkTheme) {
-          NavigationManager(
-            navi,
-            darkTheme,
-            onToggleTheme = { darkTheme = !darkTheme },
-            currentFolder,
-          )
-        }
+        BlueYellow(darkTheme = darkTheme) { NavigationManager(navi) }
       }
     }
   }

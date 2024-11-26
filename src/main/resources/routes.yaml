@@ -1,0 +1,10 @@
+routes:
+  - name: home
+    composable: Baka
+  - name: latestFiles
+    composable: LatestFiles
+  - name: fileEditor
+    composable: FileEditorWindow
+    params:
+      - filePath
+startup: home

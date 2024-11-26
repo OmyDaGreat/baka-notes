@@ -27,6 +27,7 @@ dependencies {
   implementation(libs.richtext.ui)
   implementation(libs.richtext.commonmark)
   implementation(libs.precompose)
+  implementation(libs.maleficnav)
 }
 
 compose.desktop {
