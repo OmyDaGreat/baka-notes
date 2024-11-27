@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -19,6 +18,7 @@ import io.github.omydagreat.util.PreferencesManager
 import io.github.omydagreat.util.PreferencesManager.Companion.saveScrollPosition
 import io.github.omydagreat.util.TreeNode
 import io.github.omydagreat.util.flattenTree
+import io.github.omydagreat.util.theme.Text.Body1
 import java.io.File
 
 /**
@@ -49,14 +49,9 @@ fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
 
   LazyColumn(state = listState, modifier = Modifier.fillMaxHeight().padding(start = 16.dp)) {
     items(flattenedTree) { (file, depth) ->
-      Text(
+      Body1(
         text = file.name,
-        modifier =
-          Modifier.padding(start = (depth * 16).dp).clickable {
-            if (file.isFile) {
-              onFileSelected(file)
-            }
-          },
+        modifier = Modifier.padding(start = (depth * 16).dp).clickable { onFileSelected(file) },
       )
     }
   }

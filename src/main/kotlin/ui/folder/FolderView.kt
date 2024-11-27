@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import io.github.omydagreat.ui.file.FileTreeView
 import io.github.omydagreat.util.TreeNode
 import io.github.omydagreat.util.gate
+import io.github.vinceglb.filekit.core.PlatformDirectory
 import java.io.File
 import moe.tlaster.precompose.navigation.Navigator
 
@@ -16,8 +17,19 @@ import moe.tlaster.precompose.navigation.Navigator
  * @param treeNodes The selected folder represented as a `PlatformDirectory`.
  */
 @Composable
-fun FolderView(treeNodes: TreeNode<File>, navi: Navigator) {
-  LaunchedEffect(treeNodes) { println("Current folder updated: ${treeNodes.value}") }
-
-  FileTreeView(treeNodes, onFileSelected = { file -> navi gate "fileEditor/${file.path}" })
+fun FolderView(
+  treeNodes: TreeNode<File>,
+  navi: Navigator,
+  onFolderSelected: (PlatformDirectory) -> Unit,
+) {
+  FileTreeView(
+    treeNodes,
+    onFileSelected = { file ->
+      if (file.isDirectory) {
+        onFolderSelected(PlatformDirectory(file))
+      } else if (file.isFile) {
+        navi gate "fileEditor/${file.path}"
+      }
+    },
+  )
 }
