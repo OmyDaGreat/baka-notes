@@ -14,16 +14,14 @@ import moe.tlaster.precompose.navigation.Navigator
 @Composable
 fun Sidebar(navi: Navigator, mostRecentFile: File?) {
   Column(modifier = Modifier.padding(16.dp)) {
-    Body1(text = "Home", modifier = Modifier.clickable { navi gate "home" }.padding(8.dp))
-    Body1(
-      text = "Latest Files",
-      modifier = Modifier.clickable { navi gate "latestFiles" }.padding(8.dp),
-    )
-    mostRecentFile?.let {
-      Body1(
-        text = "File Editor",
-        modifier = Modifier.clickable { navi gate "fileEditor/${it.path}" }.padding(8.dp),
-      )
-    } ?: Body1(text = "File Editor", modifier = Modifier.padding(8.dp))
+    SidebarItem("Home") { navi gate "home" }
+    SidebarItem("Latest Files") { navi gate "latestFiles" }
+    SidebarItem("File Editor") { mostRecentFile?.let { navi gate "fileEditor/${it.path}" } }
+    SidebarItem("Settings") { navi gate "settings" }
   }
+}
+
+@Composable
+fun SidebarItem(text: String, onClick: () -> Unit) {
+  Body1(text = text, modifier = Modifier.clickable(onClick = onClick).padding(8.dp))
 }

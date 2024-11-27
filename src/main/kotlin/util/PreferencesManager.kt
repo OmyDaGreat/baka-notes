@@ -1,6 +1,5 @@
 package io.github.omydagreat.util
 
-import java.util.*
 import java.util.prefs.Preferences
 
 /** A manager class for handling application preferences using the Java Preferences API. */
@@ -10,6 +9,7 @@ class PreferencesManager {
     private const val LAST_OPENED_FOLDER_KEY = "lastOpenedFolder"
     private const val LATEST_FILES_KEY = "latestFiles"
     private const val MAX_LATEST_FILES = 10
+    private const val HIDE_HIDDEN_FOLDERS_KEY = "hideHiddenFolders"
 
     /**
      * Saves the path of the last opened folder to the preferences.
@@ -60,8 +60,21 @@ class PreferencesManager {
      *
      * @return A list of file paths.
      */
-    fun loadLatestFiles(): List<String> {
-      return prefs[LATEST_FILES_KEY, ""].split(",").filter { it.isNotEmpty() }
-    }
+    fun loadLatestFiles(): List<String> =
+      prefs[LATEST_FILES_KEY, ""].split(",").filter { it.isNotEmpty() }
+
+    /**
+     * Saves the state of whether hidden folders should be hidden to the preferences.
+     *
+     * @param hide `true` to hide hidden folders, `false` otherwise.
+     */
+    fun saveHideHiddenFoldersState(hide: Boolean) = prefs.putBoolean(HIDE_HIDDEN_FOLDERS_KEY, hide)
+
+    /**
+     * Loads the state of whether hidden folders should be hidden from the preferences.
+     *
+     * @return `true` if hidden folders should be hidden, `false` otherwise.
+     */
+    fun loadHideHiddenFoldersState(): Boolean = prefs.getBoolean(HIDE_HIDDEN_FOLDERS_KEY, true)
   }
 }

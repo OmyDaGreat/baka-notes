@@ -1,40 +1,50 @@
 package io.github.omydagreat.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import io.github.omydagreat.ui.folder.FolderSelector
 import io.github.omydagreat.ui.folder.FolderView
+import io.github.omydagreat.util.buildFileTree
+import io.github.omydagreat.util.filter
 import io.github.omydagreat.util.theme.Text.Heading4
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import moe.tlaster.precompose.navigation.Navigator
 
 /**
- * Composable function that sets up the main UI scaffold.
+ * Composable function that represents the home page of the application, allowing the user to open
+ * folders and choose markdown files to edit.
  *
- * This function creates the main structure of the application's user interface, including a top app
- * bar with a title and a theme toggle switch, and a column that contains a folder selector and a
- * folder view. The folder selector allows the user to pick a directory, and the folder view
- * displays the contents of the selected directory.
- *
- * @param darkTheme Boolean indicating if the dark theme is enabled.
- * @param onToggleTheme Lambda function to toggle the theme. This function is called when the user
- *   toggles the theme switch in the top app bar.
- * @param initialFolder Initial folder to be displayed. This is the folder that was last opened by
- *   the user, and it is loaded from the preferences when the application starts.
+ * @param darkTheme Boolean indicating whether the dark theme is enabled.
+ * @param onToggleTheme Lambda function to toggle the theme.
+ * @param currentFolder The currently selected folder.
+ * @param onFolderChange Lambda function to handle folder change.
+ * @param hideHiddenFolders Boolean indicating whether to hide hidden folders.
+ * @param navi Navigator instance for handling navigation.
  */
 @Composable
 fun Baka(
   darkTheme: Boolean,
   onToggleTheme: () -> Unit,
-  initialFolder: PlatformDirectory?,
+  currentFolder: PlatformDirectory?,
+  onFolderChange: (PlatformDirectory?) -> Unit,
+  hideHiddenFolders: Boolean,
   navi: Navigator,
 ) {
-  var currentFolder by remember { mutableStateOf(initialFolder) }
+  // Remember the contents of the current folder, filtered based on the hideHiddenFolders flag.
+  val folderContents =
+    remember(currentFolder) {
+      currentFolder?.file?.buildFileTree()?.filter {
+        !hideHiddenFolders || !it.name.startsWith(".")
+      }
+    }
 
   Scaffold(
     topBar = {
@@ -45,8 +55,11 @@ fun Baka(
     }
   ) { paddingValues ->
     Column(modifier = Modifier.padding(paddingValues)) {
-      FolderSelector(onFolderSelected = { currentFolder = it })
-      currentFolder?.let { folder -> FolderView(folder, navi) }
+      // Folder selector component to choose a folder.
+      FolderSelector(onFolderSelected = onFolderChange)
+      Spacer(modifier = Modifier.height(6.dp))
+      // Display the contents of the selected folder.
+      folderContents?.let { contents -> key(currentFolder) { FolderView(contents, navi) } }
     }
   }
 }

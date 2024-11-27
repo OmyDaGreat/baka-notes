@@ -7,6 +7,8 @@ import io.github.omydagreat.ui.BlueYellow
 import io.github.omydagreat.ui.NavigationManager
 import io.github.omydagreat.ui.file.FileEditorWindow
 import io.github.omydagreat.ui.file.LatestFiles
+import io.github.omydagreat.ui.settings.SettingsPage
+import io.github.omydagreat.util.PreferencesManager.Companion.loadHideHiddenFoldersState
 import io.github.omydagreat.util.PreferencesManager.Companion.loadLastOpenedFolder
 import io.github.omydagreat.util.gate
 import io.github.vinceglb.filekit.core.PlatformDirectory
@@ -25,23 +27,43 @@ import xyz.malefic.wrap.NavWindow
  *
  * @receiver The application scope.
  */
-fun main() = application {
-  NavWindow(onCloseRequest = ::exitApplication, title = "baka Markdown Explorer") {
-    val navi = rememberNavigator()
-    var darkTheme by remember { mutableStateOf(false) }
-    var currentFolder by remember { mutableStateOf<PlatformDirectory?>(null) }
+fun main() {
+  application {
+    NavWindow(onCloseRequest = ::exitApplication, title = "baka Markdown Explorer") {
+      val navi = rememberNavigator()
+      var darkTheme by remember { mutableStateOf(false) }
+      var currentFolder by remember { mutableStateOf<PlatformDirectory?>(null) }
+      var hideHiddenFolders by remember { mutableStateOf(loadHideHiddenFoldersState()) }
 
-    val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
-      mapOf(
-        "Baka" to { Baka(darkTheme, { darkTheme = !darkTheme }, currentFolder, navi) },
-        "LatestFiles" to { LatestFiles { file -> navi gate "fileEditor/${file.path}" } },
-        "FileEditorWindow" to { params -> FileEditorWindow(File(params[0]!!)) },
-      )
+      val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
+        mapOf(
+          "Baka" to
+            {
+              Baka(
+                darkTheme = darkTheme,
+                onToggleTheme = { darkTheme = !darkTheme },
+                currentFolder = currentFolder,
+                onFolderChange = { currentFolder = it },
+                hideHiddenFolders = hideHiddenFolders,
+                navi = navi,
+              )
+            },
+          "LatestFiles" to { LatestFiles { file -> navi gate "fileEditor/${file.path}" } },
+          "FileEditorWindow" to { params -> FileEditorWindow(File(params[0]!!)) },
+          "SettingsPage" to
+            {
+              SettingsPage(
+                hideHiddenFolders = hideHiddenFolders,
+                onToggleHideHiddenFolders = { hideHiddenFolders = !hideHiddenFolders },
+              )
+            },
+        )
 
-    RouteManager.initialize(composableMap, this::class.java.getResourceAsStream("/routes.yaml")!!)
+      RouteManager.initialize(composableMap, this::class.java.getResourceAsStream("/routes.yaml")!!)
 
-    loadLastOpenedFolder()?.let { currentFolder = PlatformDirectory(File(it)) }
+      loadLastOpenedFolder()?.let { currentFolder = PlatformDirectory(File(it)) }
 
-    BlueYellow(darkTheme = darkTheme) { NavigationManager(navi) }
+      BlueYellow(darkTheme = darkTheme) { NavigationManager(navi) }
+    }
   }
 }

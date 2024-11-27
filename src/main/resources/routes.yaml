@@ -7,4 +7,6 @@ routes:
     composable: FileEditorWindow
     params:
       - filePath
+  - name: settings
+    composable: SettingsPage
 startup: home

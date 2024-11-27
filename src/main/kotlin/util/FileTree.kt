@@ -37,3 +37,18 @@ fun flattenTree(node: TreeNode<File>, depth: Int = 0): List<Pair<File, Int>> =
     it.add(node.value to depth)
     node.children.forEach { child -> it.addAll(flattenTree(child, depth + 1)) }
   }
+
+/**
+ * Filters the tree nodes based on a given predicate.
+ *
+ * This function recursively filters the tree nodes. If a node does not satisfy the predicate, it
+ * will be excluded from the resulting tree.
+ *
+ * @param predicate The condition to filter the nodes.
+ * @return The filtered tree node or null if the node does not satisfy the predicate.
+ */
+fun TreeNode<File>.filter(predicate: (File) -> Boolean): TreeNode<File>? {
+  if (!predicate(this.value)) return null
+  val filteredChildren = this.children.mapNotNull { it.filter(predicate) }
+  return TreeNode(this.value, filteredChildren)
+}

@@ -1,11 +1,9 @@
 package io.github.omydagreat.ui.folder
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import io.github.omydagreat.util.PreferencesManager.Companion.saveLastOpenedFolder
 import io.github.omydagreat.util.theme.Text.Body1B
@@ -29,6 +27,8 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun FolderSelector(onFolderSelected: (PlatformDirectory) -> Unit) {
+  val buttonColors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+
   Button(
     onClick = {
       CoroutineScope(Dispatchers.IO).launch {
@@ -39,9 +39,9 @@ fun FolderSelector(onFolderSelected: (PlatformDirectory) -> Unit) {
           Logger.i("Selected directory: $directory")
         }
       }
-    }
+    },
+    colors = buttonColors
   ) {
     Body1B("Open Folder")
   }
-  Spacer(modifier = Modifier.height(5.dp))
 }
