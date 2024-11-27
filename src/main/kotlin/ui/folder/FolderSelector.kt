@@ -5,7 +5,6 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import co.touchlab.kermit.Logger
-import io.github.omydagreat.util.PreferencesManager.Companion.saveLastOpenedFolder
 import io.github.omydagreat.util.theme.Text.Body1B
 import io.github.vinceglb.filekit.core.FileKit
 import io.github.vinceglb.filekit.core.PlatformDirectory
@@ -24,23 +23,28 @@ import kotlinx.coroutines.launch
  *
  * @param onFolderSelected Lambda function to handle folder selection. This function is called with
  *   the selected `PlatformDirectory` as its parameter.
+ * @param currentFolder The currently selected folder, if any.
  */
 @Composable
-fun FolderSelector(onFolderSelected: (PlatformDirectory) -> Unit) {
+fun FolderSelector(
+  onFolderSelected: (PlatformDirectory) -> Unit,
+  currentFolder: PlatformDirectory?,
+) {
   val buttonColors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
 
   Button(
     onClick = {
       CoroutineScope(Dispatchers.IO).launch {
-        val directory = FileKit.pickDirectory(title = "Pick a directory", initialDirectory = "C:")
+        val initialDirectory = currentFolder?.file?.absolutePath ?: System.getProperty("user.home")
+        val directory =
+          FileKit.pickDirectory(title = "Pick a directory", initialDirectory = initialDirectory)
         directory?.let {
           onFolderSelected(it)
-          saveLastOpenedFolder(it.file.absolutePath)
           Logger.i("Selected directory: $directory")
         }
       }
     },
-    colors = buttonColors
+    colors = buttonColors,
   ) {
     Body1B("Open Folder")
   }

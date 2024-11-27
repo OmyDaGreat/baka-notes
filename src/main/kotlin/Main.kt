@@ -10,6 +10,7 @@ import io.github.omydagreat.ui.file.LatestFiles
 import io.github.omydagreat.ui.settings.SettingsPage
 import io.github.omydagreat.util.PreferencesManager.Companion.loadHideHiddenFoldersState
 import io.github.omydagreat.util.PreferencesManager.Companion.loadLastOpenedFolder
+import io.github.omydagreat.util.PreferencesManager.Companion.saveLastOpenedFolder
 import io.github.omydagreat.util.gate
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import java.io.File
@@ -27,12 +28,15 @@ import xyz.malefic.wrap.NavWindow
  *
  * @receiver The application scope.
  */
+@Suppress("kotlin:S6619")
 fun main() {
   application {
     NavWindow(onCloseRequest = ::exitApplication, title = "baka Markdown Explorer") {
       val navi = rememberNavigator()
       var darkTheme by remember { mutableStateOf(false) }
-      var currentFolder by remember { mutableStateOf<PlatformDirectory?>(null) }
+      var currentFolder by remember {
+        mutableStateOf(loadLastOpenedFolder()?.let { File(it) }?.let { PlatformDirectory(it) })
+      }
       var hideHiddenFolders by remember { mutableStateOf(loadHideHiddenFoldersState()) }
 
       val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
@@ -43,7 +47,10 @@ fun main() {
                 darkTheme = darkTheme,
                 onToggleTheme = { darkTheme = !darkTheme },
                 currentFolder = currentFolder,
-                onFolderChange = { currentFolder = it },
+                onFolderChange = {
+                  currentFolder = it
+                  saveLastOpenedFolder(it!!.file.absolutePath)
+                },
                 hideHiddenFolders = hideHiddenFolders,
                 navi = navi,
               )
@@ -60,8 +67,6 @@ fun main() {
         )
 
       RouteManager.initialize(composableMap, this::class.java.getResourceAsStream("/routes.yaml")!!)
-
-      loadLastOpenedFolder()?.let { currentFolder = PlatformDirectory(File(it)) }
 
       BlueYellow(darkTheme = darkTheme) { NavigationManager(navi) }
     }

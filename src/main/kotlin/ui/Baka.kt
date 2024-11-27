@@ -38,7 +38,6 @@ fun Baka(
   hideHiddenFolders: Boolean,
   navi: Navigator,
 ) {
-  // Remember the contents of the current folder, filtered based on the hideHiddenFolders flag.
   val folderContents =
     remember(currentFolder) {
       currentFolder?.file?.buildFileTree()?.filter {
@@ -55,11 +54,11 @@ fun Baka(
     }
   ) { paddingValues ->
     Column(modifier = Modifier.padding(paddingValues)) {
-      // Folder selector component to choose a folder.
-      FolderSelector(onFolderSelected = onFolderChange)
+      FolderSelector(onFolderSelected = onFolderChange, currentFolder)
       Spacer(modifier = Modifier.height(6.dp))
-      // Display the contents of the selected folder.
-      folderContents?.let { contents -> key(currentFolder) { FolderView(contents, navi) } }
+      folderContents?.let { contents ->
+        key(currentFolder) { FolderView(contents, navi, onFolderSelected = onFolderChange) }
+      }
     }
   }
 }
