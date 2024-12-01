@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.omydagreat.util.gate
 import io.github.omydagreat.util.theme.Text.Body1
 import java.io.File
 import moe.tlaster.precompose.navigation.Navigator
+import xyz.malefic.extensions.precompose.gate
 
 @Composable
 fun Sidebar(navi: Navigator, mostRecentFile: File?) {

@@ -2,11 +2,11 @@ package io.github.omydagreat.ui.folder
 
 import androidx.compose.runtime.*
 import io.github.omydagreat.ui.file.FileTreeView
-import io.github.omydagreat.util.TreeNode
-import io.github.omydagreat.util.gate
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import java.io.File
 import moe.tlaster.precompose.navigation.Navigator
+import xyz.malefic.extensions.precompose.gate
+import xyz.malefic.extensions.standard.tree.TreeNode
 
 /**
  * Composable function to display the folder view.

@@ -14,12 +14,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.omydagreat.util.PreferencesManager
-import io.github.omydagreat.util.PreferencesManager.Companion.saveScrollPosition
-import io.github.omydagreat.util.TreeNode
-import io.github.omydagreat.util.flattenTree
+import io.github.omydagreat.util.PreferencesManager.Companion.scrollPosition
 import io.github.omydagreat.util.theme.Text.Body1
 import java.io.File
+import xyz.malefic.extensions.standard.tree.TreeNode
 
 /**
  * Composable function to display the file tree view.
@@ -38,12 +36,12 @@ import java.io.File
  */
 @Composable
 fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
-  val flattenedTree = remember { flattenTree(node) }
+  val flattenedTree = remember { node.flattenTree() }
   val listState = rememberLazyListState()
   val folderPath = node.value.absolutePath
 
   LaunchedEffect(folderPath) {
-    val savedScrollPosition = PreferencesManager.loadScrollPosition(folderPath)
+    val savedScrollPosition = scrollPosition[folderPath] ?: 0
     listState.scrollToItem(savedScrollPosition)
   }
 
@@ -57,6 +55,6 @@ fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
   }
 
   DisposableEffect(folderPath) {
-    onDispose { saveScrollPosition(folderPath, listState.firstVisibleItemIndex) }
+    onDispose { scrollPosition[folderPath] = listState.firstVisibleItemIndex }
   }
 }

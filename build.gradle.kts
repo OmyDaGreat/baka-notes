@@ -28,7 +28,10 @@ dependencies {
   implementation(libs.richtext.ui.material)
   implementation(libs.richtext.commonmark)
   implementation(libs.precompose)
-  implementation(libs.maleficnav)
+  implementation(libs.malefic.nav)
+  implementation(libs.malefic.extensions)
+  implementation(libs.malefic.components)
+  implementation(libs.malefic.prefs)
 }
 
 compose.desktop {

@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.material.RichText
 import io.github.omydagreat.util.PreferencesManager
-import io.github.omydagreat.util.loadFileContent
-import io.github.omydagreat.util.saveFile
 import java.io.File
+import xyz.malefic.extensions.standard.file.loadFileContent
+import xyz.malefic.extensions.standard.file.saveFile
 
 /**
  * Composable function that displays a file editor window along with a markdown preview.

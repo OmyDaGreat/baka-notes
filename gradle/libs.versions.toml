@@ -4,7 +4,10 @@ filekit = "0.8.7"
 kermit = "2.0.5"
 richtext = "0.20.0"
 precompose = "1.6.2"
-maleficnav = "1.0.0"
+maleficnav = "1.1.2"
+maleficextensions = "1.1.2"
+maleficcomponents = "1.0.1"
+maleficprefs = "1.1.0"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -14,7 +17,10 @@ richtext-ui = { module = "com.halilibo.compose-richtext:richtext-ui", version.re
 richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtext" }
 richtext-ui-material = { module = "com.halilibo.compose-richtext:richtext-ui-material", version.ref = "richtext" }
 precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
-maleficnav = { module = "xyz.malefic:maleficnav", version.ref = "maleficnav" }
+malefic-nav = { module = "xyz.malefic:maleficnav", version.ref = "maleficnav" }
+malefic-extensions = { module = "xyz.malefic:maleficextensions", version.ref = "maleficextensions" }
+malefic-components = { module = "xyz.malefic:maleficcomponents", version.ref = "maleficcomponents" }
+malefic-prefs = { module = "xyz.malefic:maleficprefs", version.ref = "maleficprefs" }
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA4" }

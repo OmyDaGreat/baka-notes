@@ -8,15 +8,15 @@ import io.github.omydagreat.ui.NavigationManager
 import io.github.omydagreat.ui.file.FileEditorWindow
 import io.github.omydagreat.ui.file.LatestFiles
 import io.github.omydagreat.ui.settings.SettingsPage
-import io.github.omydagreat.util.PreferencesManager.Companion.loadHideHiddenFoldersState
-import io.github.omydagreat.util.PreferencesManager.Companion.loadLastOpenedFolder
-import io.github.omydagreat.util.PreferencesManager.Companion.saveLastOpenedFolder
-import io.github.omydagreat.util.gate
+import io.github.omydagreat.util.PreferencesManager.Companion.hideHiddenFoldersPref
+import io.github.omydagreat.util.PreferencesManager.Companion.lastOpenedFolder
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import java.io.File
 import moe.tlaster.precompose.navigation.rememberNavigator
+import xyz.malefic.components.precompose.NavWindow
+import xyz.malefic.extensions.precompose.gate
 import xyz.malefic.navigate.RouteManager
-import xyz.malefic.wrap.NavWindow
+import xyz.malefic.navigate.config.YamlConfigLoader
 
 /**
  * Entry point of the application.
@@ -35,9 +35,9 @@ fun main() {
       val navi = rememberNavigator()
       var darkTheme by remember { mutableStateOf(false) }
       var currentFolder by remember {
-        mutableStateOf(loadLastOpenedFolder()?.let { File(it) }?.let { PlatformDirectory(it) })
+        mutableStateOf(lastOpenedFolder?.let { File(it) }?.let { PlatformDirectory(it) })
       }
-      var hideHiddenFolders by remember { mutableStateOf(loadHideHiddenFoldersState()) }
+      var hideHiddenFolders by remember { mutableStateOf(hideHiddenFoldersPref) }
 
       val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
         mapOf(
@@ -49,7 +49,7 @@ fun main() {
                 currentFolder = currentFolder,
                 onFolderChange = {
                   currentFolder = it
-                  saveLastOpenedFolder(it!!.file.absolutePath)
+                  lastOpenedFolder = it!!.file.absolutePath
                 },
                 hideHiddenFolders = hideHiddenFolders,
                 navi = navi,
@@ -66,7 +66,12 @@ fun main() {
             },
         )
 
-      RouteManager.initialize(composableMap, this::class.java.getResourceAsStream("/routes.yaml")!!)
+      RouteManager.initialize(
+        composableMap,
+        this::class.java.getResourceAsStream("/routes.yaml")!!,
+        configLoader = YamlConfigLoader(),
+        navi = navi,
+      )
 
       BlueYellow(darkTheme = darkTheme) { NavigationManager(navi) }
     }

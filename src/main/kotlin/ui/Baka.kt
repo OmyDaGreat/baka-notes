@@ -12,11 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.omydagreat.ui.folder.FolderSelector
 import io.github.omydagreat.ui.folder.FolderView
-import io.github.omydagreat.util.buildFileTree
-import io.github.omydagreat.util.filter
 import io.github.omydagreat.util.theme.Text.Heading4
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import moe.tlaster.precompose.navigation.Navigator
+import xyz.malefic.extensions.standard.file.buildFileTree
 
 /**
  * Composable function that represents the home page of the application, allowing the user to open
