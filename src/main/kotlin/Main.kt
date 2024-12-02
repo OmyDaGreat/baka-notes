@@ -2,7 +2,7 @@ package io.github.omydagreat
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.application
-import io.github.omydagreat.ui.Baka
+import io.github.omydagreat.ui.Home
 import io.github.omydagreat.ui.BlueYellow
 import io.github.omydagreat.ui.NavigationManager
 import io.github.omydagreat.ui.file.FileEditorWindow
@@ -44,7 +44,7 @@ fun main() {
         mapOf(
           "Baka" to
             {
-              Baka(
+              Home(
                 darkTheme = darkTheme,
                 onToggleTheme = {
                   darkTheme = !darkTheme

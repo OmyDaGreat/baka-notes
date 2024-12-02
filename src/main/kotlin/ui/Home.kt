@@ -29,7 +29,7 @@ import xyz.malefic.extensions.standard.file.buildFileTree
  * @param navi Navigator instance for handling navigation.
  */
 @Composable
-fun Baka(
+fun Home(
   darkTheme: Boolean,
   onToggleTheme: () -> Unit,
   currentFolder: PlatformDirectory?,
