@@ -15,7 +15,7 @@ import xyz.malefic.navigate.RouteManager.RoutedNavHost
 @Composable
 fun NavigationManager(navi: Navigator) {
   var mostRecentFile by remember {
-    mutableStateOf(PreferencesManager.loadLatestFiles().firstOrNull()?.let { File(it) })
+    mutableStateOf(PreferencesManager.latestFilesPref.firstOrNull()?.let { File(it) })
   }
 
   LaunchedEffect(Unit) {

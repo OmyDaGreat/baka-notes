@@ -2,6 +2,7 @@ package io.github.omydagreat.util
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import xyz.malefic.prefs.collection.PersistentArrayList
 import xyz.malefic.prefs.collection.PersistentHashMap
 import xyz.malefic.prefs.delegate.BooleanPreference
 import xyz.malefic.prefs.delegate.nullable.NullableStringPreference
@@ -16,7 +17,7 @@ class PreferencesManager {
     var lastOpenedFolderPref by NullableStringPreference("lastOpenedFolder", null)
 
     // Preference for the latest files
-    private var latestFilesPref by NullableStringPreference("latestFiles", null)
+    var latestFilesPref = PersistentArrayList<String>("latestFiles")
 
     // Maximum number of latest files to keep track of
     private const val MAX_LATEST_FILES = 10
@@ -31,7 +32,7 @@ class PreferencesManager {
     var scrollPositionPref = PersistentHashMap<String, Int>("scrollPosition")
 
     // MutableStateFlow to hold the list of latest files
-    private val _latestFilesFlow = MutableStateFlow(loadLatestFiles())
+    private val _latestFilesFlow = MutableStateFlow(latestFilesPref.toList())
 
     // StateFlow to expose the latest files as a read-only flow
     val latestFilesFlow: StateFlow<List<String>>
@@ -43,22 +44,12 @@ class PreferencesManager {
      * @param file The file to be saved.
      */
     fun saveLatestFile(file: String) {
-      val latestFiles =
-        loadLatestFiles().toMutableList().apply {
-          remove(file)
-          add(0, file)
-          if (size > MAX_LATEST_FILES) removeLast()
-          latestFilesPref = joinToString(",")
-        }
-      _latestFilesFlow.value = latestFiles
+      latestFilesPref.apply {
+        remove(file)
+        add(0, file)
+        if (size > MAX_LATEST_FILES) removeLast()
+      }
+      _latestFilesFlow.value = latestFilesPref.toList()
     }
-
-    /**
-     * Loads the list of latest files from preferences.
-     *
-     * @return A list of latest file paths.
-     */
-    fun loadLatestFiles(): List<String> =
-      (latestFilesPref ?: "").split(",").filter { it.isNotEmpty() }
   }
 }
