@@ -8,8 +8,9 @@ import io.github.omydagreat.ui.NavigationManager
 import io.github.omydagreat.ui.file.FileEditorWindow
 import io.github.omydagreat.ui.file.LatestFiles
 import io.github.omydagreat.ui.settings.SettingsPage
+import io.github.omydagreat.util.PreferencesManager.Companion.darkThemePref
 import io.github.omydagreat.util.PreferencesManager.Companion.hideHiddenFoldersPref
-import io.github.omydagreat.util.PreferencesManager.Companion.lastOpenedFolder
+import io.github.omydagreat.util.PreferencesManager.Companion.lastOpenedFolderPref
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import java.io.File
 import moe.tlaster.precompose.navigation.rememberNavigator
@@ -33,9 +34,9 @@ fun main() {
   application {
     NavWindow(onCloseRequest = ::exitApplication, title = "baka Markdown Explorer") {
       val navi = rememberNavigator()
-      var darkTheme by remember { mutableStateOf(false) }
+      var darkTheme by remember { mutableStateOf(darkThemePref) }
       var currentFolder by remember {
-        mutableStateOf(lastOpenedFolder?.let { File(it) }?.let { PlatformDirectory(it) })
+        mutableStateOf(lastOpenedFolderPref?.let { File(it) }?.let { PlatformDirectory(it) })
       }
       var hideHiddenFolders by remember { mutableStateOf(hideHiddenFoldersPref) }
 
@@ -45,11 +46,14 @@ fun main() {
             {
               Baka(
                 darkTheme = darkTheme,
-                onToggleTheme = { darkTheme = !darkTheme },
+                onToggleTheme = {
+                  darkTheme = !darkTheme
+                  darkThemePref = !darkThemePref
+                },
                 currentFolder = currentFolder,
                 onFolderChange = {
                   currentFolder = it
-                  lastOpenedFolder = it!!.file.absolutePath
+                  lastOpenedFolderPref = it!!.file.absolutePath
                 },
                 hideHiddenFolders = hideHiddenFolders,
                 navi = navi,

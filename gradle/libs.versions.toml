@@ -7,7 +7,7 @@ precompose = "1.6.2"
 maleficnav = "1.1.2"
 maleficextensions = "1.1.2"
 maleficcomponents = "1.0.1"
-maleficprefs = "1.1.0"
+maleficprefs = "1.2.1"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }

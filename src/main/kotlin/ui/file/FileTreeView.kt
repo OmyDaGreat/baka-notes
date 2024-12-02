@@ -1,5 +1,3 @@
-@file:Suppress("kotlin:S1128")
-
 package io.github.omydagreat.ui.file
 
 import androidx.compose.foundation.clickable
@@ -14,7 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.omydagreat.util.PreferencesManager.Companion.scrollPosition
+import io.github.omydagreat.util.PreferencesManager.Companion.scrollPositionPref
 import io.github.omydagreat.util.theme.Text.Body1
 import java.io.File
 import xyz.malefic.extensions.standard.tree.TreeNode
@@ -41,7 +39,7 @@ fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
   val folderPath = node.value.absolutePath
 
   LaunchedEffect(folderPath) {
-    val savedScrollPosition = scrollPosition[folderPath] ?: 0
+    val savedScrollPosition = scrollPositionPref[folderPath] ?: 0
     listState.scrollToItem(savedScrollPosition)
   }
 
@@ -55,6 +53,6 @@ fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
   }
 
   DisposableEffect(folderPath) {
-    onDispose { scrollPosition[folderPath] = listState.firstVisibleItemIndex }
+    onDispose { scrollPositionPref[folderPath] = listState.firstVisibleItemIndex }
   }
 }
