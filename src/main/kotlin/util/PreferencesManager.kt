@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import xyz.malefic.prefs.collection.PersistentArrayList
 import xyz.malefic.prefs.collection.PersistentHashMap
 import xyz.malefic.prefs.delegate.BooleanPreference
+import xyz.malefic.prefs.delegate.IntPreference
 import xyz.malefic.prefs.delegate.nullable.NullableStringPreference
 
 /**
@@ -19,8 +20,8 @@ class PreferencesManager {
     // Preference for the latest files
     var latestFilesPref = PersistentArrayList<String>("latestFiles")
 
-    // Maximum number of latest files to keep track of
-    private const val MAX_LATEST_FILES = 10
+    // Preference for the maximum number of latest files to store
+    var maxLatestFilesPref by IntPreference("maxLatestFiles", 10)
 
     // Preference to hide hidden folders
     var hideHiddenFoldersPref by BooleanPreference("hideHiddenFolders", true)
@@ -47,7 +48,7 @@ class PreferencesManager {
       latestFilesPref.apply {
         remove(file)
         add(0, file)
-        if (size > MAX_LATEST_FILES) removeLast()
+        while (size > maxLatestFilesPref) removeLast()
       }
       _latestFilesFlow.value = latestFilesPref.toList()
     }
