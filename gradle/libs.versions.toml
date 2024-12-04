@@ -6,7 +6,7 @@ richtext = "0.20.0"
 precompose = "1.6.2"
 maleficnav = "1.1.2"
 maleficextensions = "1.1.2"
-maleficcomponents = "1.0.1"
+maleficcomponents = "1.0.2"
 maleficprefs = "1.2.3"
 
 [libraries]
