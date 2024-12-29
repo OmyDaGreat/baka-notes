@@ -1,5 +1,5 @@
 [versions]
-coroutines = "1.9.0"
+coroutines = "1.10.1"
 filekit = "0.8.8"
 kermit = "2.0.5"
 richtext = "0.20.0"
