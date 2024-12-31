@@ -1,4 +1,4 @@
-package io.github.omydagreat.ui.file
+package xyz.malefic.ui.file
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,10 +12,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.omydagreat.util.PreferencesManager.Companion.scrollPositionPref
-import io.github.omydagreat.util.theme.Text.Body1
+import xyz.malefic.ext.tree.TreeNode
+import xyz.malefic.util.PreferencesManager.Companion.scrollPositionPref
+import xyz.malefic.util.theme.Text.Body1
 import java.io.File
-import xyz.malefic.extensions.standard.tree.TreeNode
 
 /**
  * Composable function to display the file tree view.
@@ -33,26 +33,29 @@ import xyz.malefic.extensions.standard.tree.TreeNode
  *   a file is selected, with the selected file as its parameter.
  */
 @Composable
-fun FileTreeView(node: TreeNode<File>, onFileSelected: (File) -> Unit) {
-  val flattenedTree = remember { node.flattenTree() }
-  val listState = rememberLazyListState()
-  val folderPath = node.value.absolutePath
+fun FileTreeView(
+    node: TreeNode<File>,
+    onFileSelected: (File) -> Unit,
+) {
+    val flattenedTree = remember { node.flattenTree().toList() }
+    val listState = rememberLazyListState()
+    val folderPath = node.value.absolutePath
 
-  LaunchedEffect(folderPath) {
-    val savedScrollPosition = scrollPositionPref[folderPath] ?: 0
-    listState.scrollToItem(savedScrollPosition)
-  }
-
-  LazyColumn(state = listState, modifier = Modifier.fillMaxHeight().padding(start = 16.dp)) {
-    items(flattenedTree) { (file, depth) ->
-      Body1(
-        text = file.name,
-        modifier = Modifier.padding(start = (depth * 16).dp).clickable { onFileSelected(file) },
-      )
+    LaunchedEffect(folderPath) {
+        val savedScrollPosition = scrollPositionPref[folderPath] ?: 0
+        listState.scrollToItem(savedScrollPosition)
     }
-  }
 
-  DisposableEffect(folderPath) {
-    onDispose { scrollPositionPref[folderPath] = listState.firstVisibleItemIndex }
-  }
+    LazyColumn(state = listState, modifier = Modifier.fillMaxHeight().padding(start = 16.dp)) {
+        items(flattenedTree) { (file, depth) ->
+            Body1(
+                text = file.name,
+                modifier = Modifier.padding(start = (depth * 16).dp).clickable { onFileSelected(file) },
+            )
+        }
+    }
+
+    DisposableEffect(folderPath) {
+        onDispose { scrollPositionPref[folderPath] = listState.firstVisibleItemIndex }
+    }
 }

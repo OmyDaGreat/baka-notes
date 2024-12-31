@@ -1,16 +1,16 @@
-package io.github.omydagreat.ui.folder
+package xyz.malefic.ui.folder
 
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import co.touchlab.kermit.Logger
-import io.github.omydagreat.util.theme.Text.Body1B
 import io.github.vinceglb.filekit.core.FileKit
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import xyz.malefic.util.theme.Text.Body1B
 
 /**
  * Composable function for selecting a folder.
@@ -27,25 +27,25 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun FolderSelector(
-  onFolderSelected: (PlatformDirectory) -> Unit,
-  currentFolder: PlatformDirectory?,
+    onFolderSelected: (PlatformDirectory) -> Unit,
+    currentFolder: PlatformDirectory?,
 ) {
-  val buttonColors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+    val buttonColors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
 
-  Button(
-    onClick = {
-      CoroutineScope(Dispatchers.IO).launch {
-        val initialDirectory = currentFolder?.file?.absolutePath ?: System.getProperty("user.home")
-        val directory =
-          FileKit.pickDirectory(title = "Pick a directory", initialDirectory = initialDirectory)
-        directory?.let {
-          onFolderSelected(it)
-          Logger.i("Selected directory: $directory")
-        }
-      }
-    },
-    colors = buttonColors,
-  ) {
-    Body1B("Open Folder")
-  }
+    Button(
+        onClick = {
+            CoroutineScope(Dispatchers.IO).launch {
+                val initialDirectory = currentFolder?.file?.absolutePath ?: System.getProperty("user.home")
+                val directory =
+                    FileKit.pickDirectory(title = "Pick a directory", initialDirectory = initialDirectory)
+                directory?.let {
+                    onFolderSelected(it)
+                    Logger.i("Selected directory: $directory")
+                }
+            }
+        },
+        colors = buttonColors,
+    ) {
+        Body1B("Open Folder")
+    }
 }

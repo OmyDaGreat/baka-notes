@@ -4,10 +4,12 @@ filekit = "0.8.8"
 kermit = "2.0.5"
 richtext = "0.20.0"
 precompose = "1.6.2"
-maleficnav = "1.1.5"
-maleficextensions = "1.1.5"
-maleficcomponents = "1.0.5"
-maleficprefs = "1.2.3"
+maleficnav = "1.2.2"
+maleficextensions = "1.3.3"
+maleficcomponents = "1.1.0"
+maleficprefs = "1.3.0"
+maleficengine = "1.2.3"
+linter = "5.0.1"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -17,10 +19,17 @@ richtext-ui = { module = "com.halilibo.compose-richtext:richtext-ui", version.re
 richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtext" }
 richtext-ui-material = { module = "com.halilibo.compose-richtext:richtext-ui-material", version.ref = "richtext" }
 precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
-malefic-nav = { module = "xyz.malefic:maleficnav", version.ref = "maleficnav" }
-malefic-extensions = { module = "xyz.malefic:maleficextensions", version.ref = "maleficextensions" }
-malefic-components = { module = "xyz.malefic:maleficcomponents", version.ref = "maleficcomponents" }
-malefic-prefs = { module = "xyz.malefic:maleficprefs", version.ref = "maleficprefs" }
+malefic-nav = { module = "xyz.malefic.compose:nav", version.ref = "maleficnav" }
+malefic-components = { module = "xyz.malefic.compose:comps", version.ref = "maleficcomponents" }
+malefic-prefs = { module = "xyz.malefic.compose:prefs", version.ref = "maleficprefs" }
+malefic-engine = { module = "xyz.malefic.compose:engine", version.ref = "maleficengine" }
+malefic-ext-core = { module = "xyz.malefic:ext-core", version.ref = "maleficextensions" }
+malefic-ext-compose = { module = "xyz.malefic:ext-compose", version.ref = "maleficextensions" }
 
 [plugins]
-spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA4" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "linter" }
+
+[bundles]
+richtext = ['richtext-ui', 'richtext-commonmark', 'richtext-ui-material']
+malefic-compose = ['malefic-prefs', 'malefic-nav', 'malefic-components', 'malefic-engine']
+malefic-ext = ['malefic-ext-core', 'malefic-ext-compose']

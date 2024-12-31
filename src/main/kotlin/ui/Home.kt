@@ -1,4 +1,4 @@
-package io.github.omydagreat.ui
+package xyz.malefic.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,12 +10,12 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.omydagreat.ui.folder.FolderSelector
-import io.github.omydagreat.ui.folder.FolderView
-import io.github.omydagreat.util.theme.Text.Heading4
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import moe.tlaster.precompose.navigation.Navigator
-import xyz.malefic.extensions.standard.file.buildFileTree
+import xyz.malefic.ext.file.buildFileTree
+import xyz.malefic.ui.folder.FolderSelector
+import xyz.malefic.ui.folder.FolderView
+import xyz.malefic.util.theme.Text.Heading4
 
 /**
  * Composable function that represents the home page of the application, allowing the user to open
@@ -30,34 +30,34 @@ import xyz.malefic.extensions.standard.file.buildFileTree
  */
 @Composable
 fun Home(
-  darkTheme: Boolean,
-  onToggleTheme: () -> Unit,
-  currentFolder: PlatformDirectory?,
-  onFolderChange: (PlatformDirectory?) -> Unit,
-  hideHiddenFolders: Boolean,
-  navi: Navigator,
+    darkTheme: Boolean,
+    onToggleTheme: () -> Unit,
+    currentFolder: PlatformDirectory?,
+    onFolderChange: (PlatformDirectory?) -> Unit,
+    hideHiddenFolders: Boolean,
+    navi: Navigator,
 ) {
-  val folderContents =
-    remember(currentFolder) {
-      currentFolder?.file?.buildFileTree()?.filter {
-        !hideHiddenFolders || !it.name.startsWith(".")
-      }
-    }
+    val folderContents =
+        remember(currentFolder) {
+            currentFolder?.file?.buildFileTree()?.filter {
+                !hideHiddenFolders || !it.name.startsWith(".")
+            }
+        }
 
-  Scaffold(
-    topBar = {
-      TopAppBar(
-        title = { Heading4("Markdown Explorer") },
-        actions = { Switch(checked = darkTheme, onCheckedChange = { onToggleTheme() }) },
-      )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Heading4("Markdown Explorer") },
+                actions = { Switch(checked = darkTheme, onCheckedChange = { onToggleTheme() }) },
+            )
+        },
+    ) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
+            FolderSelector(onFolderSelected = onFolderChange, currentFolder)
+            Spacer(modifier = Modifier.height(6.dp))
+            folderContents?.let { contents ->
+                key(currentFolder) { FolderView(contents, navi, onFolderSelected = onFolderChange) }
+            }
+        }
     }
-  ) { paddingValues ->
-    Column(modifier = Modifier.padding(paddingValues)) {
-      FolderSelector(onFolderSelected = onFolderChange, currentFolder)
-      Spacer(modifier = Modifier.height(6.dp))
-      folderContents?.let { contents ->
-        key(currentFolder) { FolderView(contents, navi, onFolderSelected = onFolderChange) }
-      }
-    }
-  }
 }

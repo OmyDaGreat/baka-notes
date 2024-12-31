@@ -1,4 +1,4 @@
-package io.github.omydagreat.ui.settings
+package xyz.malefic.ui.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -8,9 +8,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import io.github.omydagreat.util.PreferencesManager.Companion.hideHiddenFoldersPref
-import io.github.omydagreat.util.PreferencesManager.Companion.maxLatestFilesPref
-import io.github.omydagreat.util.theme.Text.Body1
+import xyz.malefic.util.PreferencesManager.Companion.hideHiddenFoldersPref
+import xyz.malefic.util.PreferencesManager.Companion.maxLatestFilesPref
+import xyz.malefic.util.theme.Text.Body1
 
 /**
  * Composable function for the Settings page.
@@ -19,13 +19,16 @@ import io.github.omydagreat.util.theme.Text.Body1
  * @param onToggleHideHiddenFolders Callback function to toggle the hidden folders setting.
  */
 @Composable
-fun SettingsPage(hideHiddenFolders: Boolean, onToggleHideHiddenFolders: () -> Unit) {
-  Scaffold(topBar = { TopAppBar(title = { Text("Settings") }) }) { paddingValues ->
-    Column(modifier = Modifier.padding(paddingValues)) {
-      HideHiddenFolders(hideHiddenFolders, onToggleHideHiddenFolders)
-      MaxLatestFiles()
+fun SettingsPage(
+    hideHiddenFolders: Boolean,
+    onToggleHideHiddenFolders: () -> Unit,
+) {
+    Scaffold(topBar = { TopAppBar(title = { Text("Settings") }) }) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
+            HideHiddenFolders(hideHiddenFolders, onToggleHideHiddenFolders)
+            MaxLatestFiles()
+        }
     }
-  }
 }
 
 /**
@@ -35,15 +38,18 @@ fun SettingsPage(hideHiddenFolders: Boolean, onToggleHideHiddenFolders: () -> Un
  * @param onToggleHideHiddenFolders Callback function to toggle the hidden folders setting.
  */
 @Composable
-private fun HideHiddenFolders(hideHiddenFolders: Boolean, onToggleHideHiddenFolders: () -> Unit) {
-  Body1("Hide folders that start with a period")
-  Switch(
-    checked = hideHiddenFolders,
-    onCheckedChange = {
-      onToggleHideHiddenFolders()
-      hideHiddenFoldersPref = it
-    },
-  )
+private fun HideHiddenFolders(
+    hideHiddenFolders: Boolean,
+    onToggleHideHiddenFolders: () -> Unit,
+) {
+    Body1("Hide folders that start with a period")
+    Switch(
+        checked = hideHiddenFolders,
+        onCheckedChange = {
+            onToggleHideHiddenFolders()
+            hideHiddenFoldersPref = it
+        },
+    )
 }
 
 /**
@@ -52,17 +58,17 @@ private fun HideHiddenFolders(hideHiddenFolders: Boolean, onToggleHideHiddenFold
  */
 @Composable
 private fun MaxLatestFiles() {
-  var maxLatestFiles by remember { mutableStateOf(maxLatestFilesPref) }
-  var maxLatestFilesInput by remember { mutableStateOf(TextFieldValue(maxLatestFiles.toString())) }
+    var maxLatestFiles by remember { mutableStateOf(maxLatestFilesPref) }
+    var maxLatestFilesInput by remember { mutableStateOf(TextFieldValue(maxLatestFiles.toString())) }
 
-  TextField(
-    value = maxLatestFilesInput,
-    onValueChange = {
-      maxLatestFilesInput = it
-      maxLatestFiles = it.text.toIntOrNull() ?: maxLatestFiles
-      maxLatestFilesPref = maxLatestFiles
-    },
-    label = { Text("Max Latest Files Stored", color = MaterialTheme.colors.onBackground) },
-    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-  )
+    TextField(
+        value = maxLatestFilesInput,
+        onValueChange = {
+            maxLatestFilesInput = it
+            maxLatestFiles = it.text.toIntOrNull() ?: maxLatestFiles
+            maxLatestFilesPref = maxLatestFiles
+        },
+        label = { Text("Max Latest Files Stored", color = MaterialTheme.colors.onBackground) },
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+    )
 }

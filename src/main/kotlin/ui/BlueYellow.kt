@@ -1,10 +1,10 @@
-package io.github.omydagreat.ui
+package xyz.malefic.ui
 
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import io.github.omydagreat.util.themed.BYDarkColorPalette
-import io.github.omydagreat.util.themed.BYLightColorPalette
+import xyz.malefic.util.theme.BYDarkColorPalette
+import xyz.malefic.util.theme.BYLightColorPalette
 
 /**
  * A composable function that applies the BlueYellow theme to its content.
@@ -13,13 +13,16 @@ import io.github.omydagreat.util.themed.BYLightColorPalette
  * @param content A composable lambda function representing the content to be theme.
  */
 @Composable
-fun BlueYellow(darkTheme: Boolean = false, content: @Composable () -> Unit) {
-  val colors: Colors =
-    if (darkTheme) {
-      BYDarkColorPalette
-    } else {
-      BYLightColorPalette
-    }
+fun BlueYellow(
+    darkTheme: Boolean = false,
+    content: @Composable () -> Unit,
+) {
+    val colors: Colors =
+        if (darkTheme) {
+            BYDarkColorPalette
+        } else {
+            BYLightColorPalette
+        }
 
-  MaterialTheme(colors = colors, content = content)
+    MaterialTheme(colors = colors, content = content)
 }

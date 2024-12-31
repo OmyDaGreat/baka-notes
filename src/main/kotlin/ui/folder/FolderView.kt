@@ -1,12 +1,12 @@
-package io.github.omydagreat.ui.folder
+package xyz.malefic.ui.folder
 
 import androidx.compose.runtime.*
-import io.github.omydagreat.ui.file.FileTreeView
 import io.github.vinceglb.filekit.core.PlatformDirectory
-import java.io.File
 import moe.tlaster.precompose.navigation.Navigator
-import xyz.malefic.extensions.precompose.gate
-import xyz.malefic.extensions.standard.tree.TreeNode
+import xyz.malefic.ext.precompose.gate
+import xyz.malefic.ext.tree.TreeNode
+import xyz.malefic.ui.file.FileTreeView
+import java.io.File
 
 /**
  * Composable function to display the folder view.
@@ -18,18 +18,18 @@ import xyz.malefic.extensions.standard.tree.TreeNode
  */
 @Composable
 fun FolderView(
-  treeNodes: TreeNode<File>,
-  navi: Navigator,
-  onFolderSelected: (PlatformDirectory) -> Unit,
+    treeNodes: TreeNode<File>,
+    navi: Navigator,
+    onFolderSelected: (PlatformDirectory) -> Unit,
 ) {
-  FileTreeView(
-    treeNodes,
-    onFileSelected = { file ->
-      if (file.isDirectory) {
-        onFolderSelected(PlatformDirectory(file))
-      } else if (file.isFile) {
-        navi gate "fileEditor/${file.path}"
-      }
-    },
-  )
+    FileTreeView(
+        treeNodes,
+        onFileSelected = { file ->
+            if (file.isDirectory) {
+                onFolderSelected(PlatformDirectory(file))
+            } else if (file.isFile) {
+                navi gate "fileEditor/${file.path}"
+            }
+        },
+    )
 }

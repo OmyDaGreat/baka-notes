@@ -1,4 +1,4 @@
-package io.github.omydagreat.ui.file
+package xyz.malefic.ui.file
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -13,10 +13,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.material.RichText
-import io.github.omydagreat.util.PreferencesManager
+import xyz.malefic.ext.file.loadFileContent
+import xyz.malefic.ext.file.saveFile
+import xyz.malefic.ui.file.FileEditor
+import xyz.malefic.util.PreferencesManager
 import java.io.File
-import xyz.malefic.extensions.standard.file.loadFileContent
-import xyz.malefic.extensions.standard.file.saveFile
 
 /**
  * Composable function that displays a file editor window along with a markdown preview.
@@ -30,27 +31,27 @@ import xyz.malefic.extensions.standard.file.saveFile
  */
 @Composable
 fun FileEditorWindow(file: File) {
-  var fileContent by remember { mutableStateOf("") }
+    var fileContent by remember { mutableStateOf("") }
 
-  LaunchedEffect(file) {
-    PreferencesManager.saveLatestFile(file.absolutePath)
-    file.loadFileContent { content -> fileContent = content }
-  }
-
-  Row(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-    FileEditor(
-      content = fileContent,
-      onContentChanged = {
-        fileContent = it
-        file.saveFile(it)
-      },
-      modifier = Modifier.weight(1f).padding(end = 8.dp),
-    )
-
-    Column(
-      modifier = Modifier.weight(1f).padding(start = 8.dp).verticalScroll(rememberScrollState())
-    ) {
-      RichText(modifier = Modifier.background(Color.White).padding(16.dp)) { Markdown(fileContent) }
+    LaunchedEffect(file) {
+        PreferencesManager.saveLatestFile(file.absolutePath)
+        file.loadFileContent { content -> fileContent = content }
     }
-  }
+
+    Row(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        FileEditor(
+            content = fileContent,
+            onContentChanged = {
+                fileContent = it
+                file.saveFile(it)
+            },
+            modifier = Modifier.weight(1f).padding(end = 8.dp),
+        )
+
+        Column(
+            modifier = Modifier.weight(1f).padding(start = 8.dp).verticalScroll(rememberScrollState()),
+        ) {
+            RichText(modifier = Modifier.background(Color.White).padding(16.dp)) { Markdown(fileContent) }
+        }
+    }
 }
