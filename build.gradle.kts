@@ -1,10 +1,10 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    kotlin("jvm") version "2.1.0"
-    id("org.jetbrains.compose") version "1.7.3"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.1.0"
+    alias(libs.plugins.compose.kotlin)
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlinter)
+    alias(libs.plugins.compose)
 }
 
 group = "xyz.malefic"
