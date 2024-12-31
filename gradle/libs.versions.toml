@@ -10,7 +10,7 @@ maleficcomponents = "1.1.0"
 maleficprefs = "1.3.0"
 maleficengine = "1.2.3"
 linter = "5.0.1"
-compose = "1.7.3"
+compose = "1.8.0+dev1989"
 kotlin = "2.1.0"
 
 [libraries]
