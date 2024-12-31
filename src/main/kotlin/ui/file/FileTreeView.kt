@@ -12,9 +12,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.ext.tree.TreeNode
 import xyz.malefic.util.PreferencesManager.Companion.scrollPositionPref
-import xyz.malefic.util.theme.Text.Body1
 import java.io.File
 
 /**

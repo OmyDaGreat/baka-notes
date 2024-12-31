@@ -1,21 +1,30 @@
 package xyz.malefic.ui.file
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.material.RichText
+import xyz.malefic.compose.engine.factory.ColumnFactory
+import xyz.malefic.compose.engine.factory.RowFactory
+import xyz.malefic.compose.engine.factory.div
+import xyz.malefic.compose.engine.factory.divAssign
+import xyz.malefic.compose.engine.factory.timesAssign
+import xyz.malefic.compose.engine.fuel.background
+import xyz.malefic.compose.engine.fuel.fuel
+import xyz.malefic.compose.engine.fuel.padding
 import xyz.malefic.ext.file.loadFileContent
 import xyz.malefic.ext.file.saveFile
-import xyz.malefic.ui.file.FileEditor
 import xyz.malefic.util.PreferencesManager
 import java.io.File
 
@@ -38,7 +47,7 @@ fun FileEditorWindow(file: File) {
         file.loadFileContent { content -> fileContent = content }
     }
 
-    Row(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    RowFactory {
         FileEditor(
             content = fileContent,
             onContentChanged = {
@@ -48,10 +57,17 @@ fun FileEditorWindow(file: File) {
             modifier = Modifier.weight(1f).padding(end = 8.dp),
         )
 
-        Column(
-            modifier = Modifier.weight(1f).padding(start = 8.dp).verticalScroll(rememberScrollState()),
-        ) {
-            RichText(modifier = Modifier.background(Color.White).padding(16.dp)) { Markdown(fileContent) }
+        ColumnFactory {
+            fuel { RichText { Markdown(fileContent) } } *= {
+                background(Color.White)
+                padding(16.dp)
+            }
+        } /= {
+            modifier = Modifier.weight(1f).padding(start = 8.dp).verticalScroll(rememberScrollState())
         }
+    } / {
+        modifier = Modifier.fillMaxSize()
+    } *= {
+        padding(16.dp)
     }
 }

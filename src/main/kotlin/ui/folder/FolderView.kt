@@ -1,6 +1,6 @@
 package xyz.malefic.ui.folder
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import io.github.vinceglb.filekit.core.PlatformDirectory
 import moe.tlaster.precompose.navigation.Navigator
 import xyz.malefic.ext.precompose.gate

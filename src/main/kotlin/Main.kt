@@ -29,7 +29,6 @@ import java.io.File
  *
  * @receiver The application scope.
  */
-@Suppress("kotlin:S6619")
 fun main() {
     application {
         NavWindow(onCloseRequest = ::exitApplication, title = "baka Markdown Explorer") {

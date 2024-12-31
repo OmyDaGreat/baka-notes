@@ -1,6 +1,5 @@
 package xyz.malefic.ui.folder
 
-import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -10,7 +9,9 @@ import io.github.vinceglb.filekit.core.PlatformDirectory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import xyz.malefic.util.theme.Text.Body1B
+import xyz.malefic.compose.comps.text.typography.Body1B
+import xyz.malefic.compose.engine.factory.ButtonFactory
+import xyz.malefic.compose.engine.factory.divAssign
 
 /**
  * Composable function for selecting a folder.
@@ -32,7 +33,7 @@ fun FolderSelector(
 ) {
     val buttonColors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
 
-    Button(
+    ButtonFactory { Body1B("Open Folder") } /= {
         onClick = {
             CoroutineScope(Dispatchers.IO).launch {
                 val initialDirectory = currentFolder?.file?.absolutePath ?: System.getProperty("user.home")
@@ -43,9 +44,7 @@ fun FolderSelector(
                     Logger.i("Selected directory: $directory")
                 }
             }
-        },
-        colors = buttonColors,
-    ) {
-        Body1B("Open Folder")
+        }
+        colors = buttonColors
     }
 }

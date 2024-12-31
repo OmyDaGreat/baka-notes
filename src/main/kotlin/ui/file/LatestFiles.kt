@@ -10,8 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.util.PreferencesManager
-import xyz.malefic.util.theme.Text.Body1
 import java.io.File
 
 /**
